@@ -23,6 +23,12 @@ RUN set -ex; \
 RUN echo "deb http://repo.mysql.com/apt/debian/ stretch mysql-${MYSQL_MAJOR}" > /etc/apt/sources.list.d/mysql.list
 RUN apt-get update && apt-get install -y mysql-community-client="${MYSQL_VERSION}" libmysqlclient21
 
+# PostgreSQL
+RUN apt-get install -y libpq-dev
+
+# MS SQL Server
+RUN apt-get install -y unixodbc-dev
+
 RUN curl -kLJO {$HAMMER_URI}/v{$HAMMER_VERSION}/HammerDB-{$HAMMER_VERSION}-Linux.tar.gz
 RUN tar -zxvf HammerDB-$HAMMER_VERSION-Linux.tar.gz \
 	&& rm -rf HammerDB-$HAMMER_VERSION-Linux.tar.gz \
