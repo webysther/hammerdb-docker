@@ -1,4 +1,4 @@
-FROM debian
+FROM debian:stable-slim
 
 # MySQL driver
 ENV MYSQL_MAJOR 8.0
@@ -34,6 +34,8 @@ RUN tar -zxvf HammerDB-$HAMMER_VERSION-Linux.tar.gz \
   && rm -rf HammerDB-$HAMMER_VERSION-Linux.tar.gz \
   && mv HammerDB-$HAMMER_VERSION hammerdb \
   && mkdir hammerdb/data
+
+RUN rm -rf /var/lib/apt/lists/*
 
 WORKDIR /hammerdb
 VOLUME hammerdb/data
