@@ -4,7 +4,16 @@ FROM debian:stable-slim
 ENV MYSQL_MAJOR 8.0
 ENV MYSQL_VERSION 8.0.19-1debian9
 
-RUN apt-get update && apt-get install --no-install-recommends -y gnupg
+RUN apt-get update && apt-get install --no-install-recommends -y gnupg curl ca-certificates
+
+# MS SQL Server driver (http://bit.ly/2TzldUy)
+RUN curl -kLJ https://packages.microsoft.com/keys/microsoft.asc | apt-key add -
+RUN curl -kLJ https://packages.microsoft.com/config/debian/10/prod.list > /etc/apt/sources.list.d/mssql-release.list
+RUN apt-get update && ACCEPT_EULA=Y apt-get install -y msodbcsql17
+RUN ACCEPT_EULA=Y apt-get install mssql-tools
+RUN apt-get install -y unixodbc-dev libgssapi-krb5-2
+ENV PATH="/opt/mssql-tools/bin:${PATH}"
+
 RUN set -ex; \
 # gpg: key 5072E1F5: public key "MySQL Release Engineering <mysql-build@oss.oracle.com>" imported
   key='A4A9406876FCBD3C456770C88C718D3B5072E1F5'; \
@@ -20,9 +29,6 @@ RUN apt-get update && apt-get install -y mysql-community-client="${MYSQL_VERSION
 
 # PostgreSQL driver
 RUN apt-get install -y libpq-dev
-
-# MS SQL Server driver
-RUN apt-get install -y unixodbc-dev
 
 # HammerDB
 ENV HAMMER_VERSION=3.3
